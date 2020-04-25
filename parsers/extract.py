@@ -4,7 +4,6 @@ Contains functions used to recursively extract
 
 import tarfile
 import os
-import platform
 from multiprocessing import cpu_count, Pool
 
 
@@ -28,16 +27,16 @@ def get_all_files(dir_path, ext=None, deep=True):
         shallow_list = os.listdir(dir_path)
     except:
         return []
-    allFiles = list()
+    all_files = list()
     for entry in shallow_list:
-        fullPath = os.path.join(dir_path, entry)
-        if os.path.isdir(fullPath):
+        full_path = os.path.join(dir_path, entry)
+        if os.path.isdir(full_path):
             if deep:
-                allFiles.extend(get_all_files(fullPath, ext=ext))
+                all_files.extend(get_all_files(full_path, ext=ext))
         else:
-            if (ext is not None and fullPath.endswith(ext)) or ext is None:
-                allFiles.append(fullPath)
-    return allFiles
+            if (ext is not None and full_path.endswith(ext)) or ext is None:
+                all_files.append(full_path)
+    return all_files
 
 
 def extract_all(root, working_dir=None):
@@ -48,20 +47,16 @@ def extract_all(root, working_dir=None):
 
     # fold default
     if working_dir is None:
-        working = f"{root}/results/"
+        working_dir = f"{root}/results/"
 
     working_abs = os.path.abspath(working_dir)
-    all_unextracted_archives = [archive for archive in get_all_files(root, ext=".tar.gz")
-                                if not has_been_extracted(archive, working_abs)]
-    if all_unextracted_archives:
-        num_workers = min(cpu_count(), len(all_unextracted_archives))
-        print(
-            f"Extracting {len(all_unextracted_archives)} top level archives on {num_workers} workers")
-        archives_with_working_dir = zip(all_unextracted_archives,
-                                        [working_abs] * len(all_unextracted_archives))
-        with Pool(num_workers) as pool:
-            for _ in pool.imap_unordered(subprocess_extract, archives_with_working_dir):
-                pass
+    all_archives = [archive for archive in get_all_files(root, ext=".tar.gz")]
+    num_workers = min(cpu_count(), len(all_archives))
+    print(f"Extracting {len(all_archives)} top level archives on {num_workers} workers")
+    archives_with_working_dir = zip(all_archives, [working_abs] * len(all_archives))
+    with Pool(num_workers) as pool:
+        for _ in pool.imap_unordered(subprocess_extract, archives_with_working_dir):
+            pass
 
     # Return list of all extracted archives
     return get_all_files(root, ext=".tar.gz")
@@ -73,8 +68,6 @@ def subprocess_extract(path_tuple):
     """
 
     (archive_path, working_dir) = path_tuple
-    pid = os.getpid()
-    print(f"Extracting top level archive {archive_path} to {working_dir} on process PID {pid}")
     extract_recursive(archive_path, working_dir)
 
 
@@ -98,15 +91,15 @@ def extract_recursive(archive_path, working_dir="./working"):
 
     extracted_path = os.path.join(working_dir, get_unique_name(archive_path))
     if not os.path.exists(extracted_path):
-        print(f"Extracting {archive_path} to {extracted_path}...", end=" ")
+        print(f"Extracting {archive_path} to {extracted_path}...")
         with tarfile.open(archive_path) as tar_file:
             tar_file.extractall(extracted_path)
-        print("done")
 
     # Now, search for all .tar.gz and .gz files in folder
     all_archives = get_all_files(extracted_path, ext=".tar.gz")
     all_gzipped = [file for file in get_all_files(extracted_path, ext=".gz")
-                   if not file.endswith(".tar.gz")]
+                   if not file.endswith(".tar.gz")
+                   and not os.path.exists(os.path.splitext(file)[0])]
 
     # Extract all gzip files
     if all_gzipped:
@@ -116,4 +109,3 @@ def extract_recursive(archive_path, working_dir="./working"):
     if all_archives:
         for archive in all_archives:
             extract_recursive(archive, working_dir=os.path.dirname(archive))
-
