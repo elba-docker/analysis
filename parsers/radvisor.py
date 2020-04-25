@@ -10,7 +10,11 @@ import pandas as pd
 from dateutil import parser
 from collections import OrderedDict
 from more_itertools import peekable
-import glob, os, json, csv, argparse
+import glob
+import os
+import json
+import csv
+import argparse
 from csv import Error
 import yaml
 from yaml import load, dump, Loader
@@ -18,10 +22,12 @@ from yaml import load, dump, Loader
 
 DESCRIPTION = "Script to parse rAdvisor container stat logs"
 
+
 def in_t(val):
     if val is not None and len(val) > 0:
         return int(val)
     return 0
+
 
 class DataClass:
     def __getattr__(self, attr):
@@ -43,7 +49,7 @@ class BlkioEntry(DataClass):
         self._minor = in_t(minor)
         self._value = in_t(value)
         self._op = op
-        #print()
+        # print()
 
 
 class CpuUsage(DataClass):
@@ -115,7 +121,7 @@ class PidsStats(DataClass):
 
     def __init__(self, row):
         self._current = in_t(row["pids.current"])
-        self._max= 0 if row["pids.max"] == "max" else in_t(row["pids.max"])
+        self._max = 0 if row["pids.max"] == "max" else in_t(row["pids.max"])
 
 
 class LogEntry(DataClass):
@@ -150,7 +156,6 @@ def parse_blkio(raw):
 
     split = [entry.strip() for entry in raw.split(",")]
 
-
     return [BlkioEntry(entry) for entry in split if len(entry.split(" ")) == 3 and "Total" not in entry]
 
 
@@ -179,7 +184,7 @@ def main(iterator):
     yaml_loader = Loader(yaml_str)
     metadata = yaml_loader.get_data()
 
-    csv_reader = csv.DictReader(file_iter) 
+    csv_reader = csv.DictReader(file_iter)
 
     # skip header row
     next(csv_reader)

@@ -42,7 +42,7 @@ def get_all_files(dir_path, ext=None, deep=True):
 def extract_all(root, working_dir=None):
     """
     Extracts all found archives from root into working_dir recursively, returning a
-    lazy-parsing ORM root object once done
+    list of all completely extracted archives
     """
 
     # fold default

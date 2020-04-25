@@ -22,7 +22,6 @@ class LogEntryConnect:
         self._sock_fd = sock_fd
         self._port = port
 
-
     def __lt__(self, other):
         """Less than comparison operator.
 
@@ -40,7 +39,7 @@ class LogEntryConnect:
     def ts(self):
         """Return the timestamp."""
         return self._ts
-    
+
     def pid(self):
         return self._pid
 
@@ -53,6 +52,7 @@ class LogEntryConnect:
 
     def port(self):
         return self._port
+
 
 class LogEntry:
     """A TCP/IP event log entry."""
@@ -71,7 +71,6 @@ class LogEntry:
         self._tid = tid
         self._sock_fd = sock_fd
 
-
     def __lt__(self, other):
         """Less than comparison operator.
 
@@ -89,7 +88,7 @@ class LogEntry:
     def ts(self):
         """Return the timestamp."""
         return self._ts
-    
+
     def pid(self):
         return self._pid
 
@@ -111,15 +110,18 @@ def spec_connect(iterator):
     connect_reader = csv.DictReader(iterator)
     val = 0
     for connect_row in connect_reader:
-        log_entries[val] = LogEntryConnect('connect', int(connect_row['RET']), int(connect_row['TS']), int(connect_row['PID']), int(connect_row['TID']), int(connect_row['SOCK_FD']), int(connect_row['PORT']))
+        log_entries[val] = LogEntryConnect('connect', int(connect_row['RET']), int(connect_row['TS']), int(
+            connect_row['PID']), int(connect_row['TID']), int(connect_row['SOCK_FD']), int(connect_row['PORT']))
         val = val + 1
     return log_entries
+
 
 def main(iterator):
     log_entries = OrderedDict()
     connect_reader = csv.DictReader(iterator)
     val = 0
     for connect_row in connect_reader:
-        log_entries[val] = LogEntry('connect', int(connect_row['RET']), int(connect_row['TS']), int(connect_row['PID']), int(connect_row['TID']), int(connect_row['SOCK_FD']))
+        log_entries[val] = LogEntry('connect', int(connect_row['RET']), int(connect_row['TS']), int(
+            connect_row['PID']), int(connect_row['TID']), int(connect_row['SOCK_FD']))
         val = val + 1
     return log_entries

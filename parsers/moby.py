@@ -171,12 +171,12 @@ def main(filename):
     """
 
     entries = OrderedDict()
-    csv_reader = csv.DictReader(filename) 
+    csv_reader = csv.DictReader(filename)
 
-          # skip header row
     next(csv_reader)
 
     for row in csv_reader:
         entry = LogEntry(dict(row), entries=entries)
-        entries[entry.read] = entry
+        if entry.read > 0:
+            entries[entry.read] = entry
     return entries

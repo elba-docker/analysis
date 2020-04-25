@@ -132,7 +132,7 @@ class TestReplica:
     # Cached weakrefs to values
     config_sh = None
 
-    def config(self):
+    def config(self) -> Optional[Dict[str, Union[int, str]]]:
         if not self.config_sh or not self.config_sh():
             parsed = WeakRefDict(parse_config(self.config_path))
             if parsed:
@@ -141,7 +141,7 @@ class TestReplica:
         else:
             return self.config_sh()
 
-    def single(self):
+    def single(self) -> Optional[TestHost]:
         return next(iter(self.hosts.values()))
 
 
