@@ -33,7 +33,7 @@ def main(iterator):
             continue
         disk_entry_data = disk_line.split()
         timestamp_str = f"{disk_entry_data[0]} {disk_entry_data[1]}"
-        timestamp = datetime.datetime.strptime(timestamp_str, "%H:%M:%S.%f")
+        timestamp = datetime.datetime.strptime(timestamp_str, "%Y%m%d %H:%M:%S.%f")
         total_read_in_kb = 0
         total_write_in_kb = 0
         for disk_no in range((len(disk_entry_data) - 2) // 14):

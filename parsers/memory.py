@@ -25,6 +25,6 @@ def main(iterator):
             continue
         mem_entry_data = mem_line.split()
         timestamp_str = f"{mem_entry_data[0]} {mem_entry_data[1]}"
-        timestamp = datetime.datetime.strptime(timestamp_str, "%H:%M:%S.%f")
+        timestamp = datetime.datetime.strptime(timestamp_str, "%Y%m%d %H:%M:%S.%f")
         mem_entries[timestamp] = MemEntry(int(mem_entry_data[2]), int(mem_entry_data[3]), timestamp)
     return mem_entries
