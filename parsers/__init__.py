@@ -302,10 +302,10 @@ def try_path(*segments):
     else:
         return constructed_path
 
+
 # ? ================
 # ? Parser functions
 # ? ================
-
 
 def parse_containers(container_paths: List[ContainerPaths]) -> List[Container]:
     containers = WeakRefList()
@@ -333,7 +333,7 @@ def parse_nbench(nbench_path):
     try:
         with open(nbench_path, 'r') as file:
             return nbench.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -343,7 +343,7 @@ def parse_radvisor(radvisor_path):
     try:
         with open(radvisor_path, 'r') as file:
             return radvisor.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -353,7 +353,7 @@ def parse_moby(moby_path):
     try:
         with open(moby_path, 'r') as file:
             return moby.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -363,7 +363,7 @@ def parse_config(config_path: Optional[str]):
     try:
         with open(config_path, 'r') as file:
             return config.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -373,7 +373,7 @@ def parse_milliscope_connect(connect_path: Optional[str]):
     try:
         with open(connect_path, 'r') as file:
             return milliscope.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -383,7 +383,7 @@ def parse_milliscope_recvfrom(recvfrom_path: Optional[str]):
     try:
         with open(recvfrom_path, 'r') as file:
             return milliscope.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -393,7 +393,7 @@ def parse_milliscope_sendto(sendto_path: Optional[str]):
     try:
         with open(sendto_path, 'r') as file:
             return milliscope.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -403,7 +403,7 @@ def parse_collectl_cpu(cpu_path: Optional[str]):
     try:
         with open(cpu_path, 'r') as file:
             return cpu.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -413,7 +413,7 @@ def parse_collectl_memory(memory_path: Optional[str]):
     try:
         with open(memory_path, 'r') as file:
             return memory.main(iter(file))
-    except OSError:
+    except Exception:
         return None
 
 
@@ -423,5 +423,5 @@ def parse_collectl_disk(disk_path: Optional[str]):
     try:
         with open(disk_path, 'r') as file:
             return disk.main(iter(file))
-    except OSError:
+    except Exception:
         return None
