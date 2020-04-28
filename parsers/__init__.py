@@ -372,7 +372,7 @@ def parse_milliscope_connect(connect_path: Optional[str]):
         return None
     try:
         with open(connect_path, 'r') as file:
-            return milliscope.main(iter(file))
+            return milliscope.spec_connect(iter(file))
     except OSError:
         return None
 
