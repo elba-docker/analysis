@@ -35,6 +35,14 @@ class WeakRefDict(dict):
     pass
 
 
+class ForgetfulWeakRef(weakref.ReferenceType):
+    def __getstate__(self):
+        return None
+
+    def __setstate__(self, d):
+        pass
+
+
 @dataclass
 class TestHost:
     # Ids
@@ -60,7 +68,7 @@ class TestHost:
             if not self.containers_ref or not self.containers_ref():
                 parsed = parse_containers(self.container_paths)
                 if parsed:
-                    self.containers_ref = weakref.ref(parsed)
+                    self.containers_ref = ForgetfulWeakRef(parsed)
                 return parsed
             else:
                 return self.containers_ref()
@@ -71,7 +79,7 @@ class TestHost:
         if not self.milliscope_connect or not self.milliscope_connect():
             parsed = parse_milliscope_connect(self.milliscope_paths.connect)
             if parsed:
-                self.milliscope_connect = weakref.ref(parsed)
+                self.milliscope_connect = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.milliscope_connect()
@@ -80,7 +88,7 @@ class TestHost:
         if not self.milliscope_recvfrom or not self.milliscope_recvfrom():
             parsed = parse_milliscope_recvfrom(self.milliscope_paths.recvfrom)
             if parsed:
-                self.milliscope_recvfrom = weakref.ref(parsed)
+                self.milliscope_recvfrom = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.milliscope_connect()
@@ -89,7 +97,7 @@ class TestHost:
         if not self.milliscope_sendto or not self.milliscope_sendto():
             parsed = parse_milliscope_sendto(self.milliscope_paths.sendto)
             if parsed:
-                self.milliscope_sendto = weakref.ref(parsed)
+                self.milliscope_sendto = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.milliscope_connect()
@@ -98,7 +106,7 @@ class TestHost:
         if not self.collectl_cpu or not self.collectl_cpu():
             parsed = WeakRefList(parse_collectl_cpu(self.collectl_paths.cpu))
             if parsed:
-                self.collectl_cpu = weakref.ref(parsed)
+                self.collectl_cpu = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.collectl_cpu()
@@ -107,7 +115,7 @@ class TestHost:
         if not self.collectl_memory or not self.collectl_memory():
             parsed = WeakRefList(parse_collectl_memory(self.collectl_paths.memory))
             if parsed:
-                self.collectl_memory = weakref.ref(parsed)
+                self.collectl_memory = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.collectl_cpu()
@@ -116,7 +124,7 @@ class TestHost:
         if not self.collectl_disk or not self.collectl_disk():
             parsed = WeakRefList(parse_collectl_disk(self.collectl_paths.disk))
             if parsed:
-                self.collectl_disk = weakref.ref(parsed)
+                self.collectl_disk = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.collectl_cpu()
@@ -136,7 +144,7 @@ class TestReplica:
         if not self.config_sh or not self.config_sh():
             parsed = WeakRefDict(parse_config(self.config_path))
             if parsed:
-                self.config_sh = weakref.ref(parsed)
+                self.config_sh = ForgetfulWeakRef(parsed)
             return parsed
         else:
             return self.config_sh()
